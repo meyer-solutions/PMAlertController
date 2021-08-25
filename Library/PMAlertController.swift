@@ -99,7 +99,7 @@ import UIKit
     }
     
     fileprivate func wrapIntoScrollview(_ height: CGFloat) {
-        if self.alertDescriptionScrollView == nil, height > 200 {
+        if self.alertDescriptionScrollView == nil, height > 250 {
             let superView = alertDescription.superview as? UIStackView
             alertDescription.removeFromSuperview()
             let scrollView = UIScrollView()
@@ -110,7 +110,7 @@ import UIKit
             alertDescription?.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1.0).isActive = true
             alertDescription?.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0.0).isActive = true
             alertDescription?.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0.0).isActive = true
-            scrollView.heightAnchor.constraint(equalToConstant: 200.0).isActive = true
+            scrollView.heightAnchor.constraint(equalToConstant: 250.0).isActive = true
             
             self.alertDescriptionScrollView = scrollView
             
