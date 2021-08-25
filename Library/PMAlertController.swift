@@ -36,6 +36,8 @@ import UIKit
     @IBOutlet weak open var alertActionStackViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak open var alertActionStackViewBottomConstraint: NSLayoutConstraint!
     
+    var alertDescriptionScrollView: UIScrollView?
+    
     open var ALERT_STACK_VIEW_HEIGHT : CGFloat = UIScreen.main.bounds.height < 568.0 ? 40 : 62 //if iphone 4 the stack_view_height is 40, else 62
     var animator : UIDynamicAnimator?
     
@@ -79,6 +81,26 @@ import UIKit
         
         if let description = description {
             alertDescription.text = description
+            alertDescription.layoutIfNeeded()
+            
+            if self.alertDescriptionScrollView == nil, alertDescription.bounds.size.height > 200 {
+                let superView = alertDescription.superview as? UIStackView
+                alertDescription.removeFromSuperview()
+                let scrollView = UIScrollView()
+                superView?.addArrangedSubview(scrollView)
+                scrollView.addSubview(alertDescription)
+                
+                alertDescription?.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0.0).isActive = true
+                alertDescription?.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1.0).isActive = true
+                alertDescription?.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0.0).isActive = true
+                alertDescription?.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0.0).isActive = true
+                scrollView.heightAnchor.constraint(equalToConstant: 200.0).isActive = true
+                
+                self.alertDescriptionScrollView = scrollView
+                
+                superView?.layoutIfNeeded()
+            }
+                        
         }else{
             alertDescription.isHidden = true
         }
