@@ -82,25 +82,8 @@ import UIKit
         if let description = description {
             alertDescription.text = description
             alertDescription.layoutIfNeeded()
-            
-            if self.alertDescriptionScrollView == nil, alertDescription.bounds.size.height > 200 {
-                let superView = alertDescription.superview as? UIStackView
-                alertDescription.removeFromSuperview()
-                let scrollView = UIScrollView()
-                superView?.addArrangedSubview(scrollView)
-                scrollView.addSubview(alertDescription)
-                
-                alertDescription?.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0.0).isActive = true
-                alertDescription?.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1.0).isActive = true
-                alertDescription?.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0.0).isActive = true
-                alertDescription?.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0.0).isActive = true
-                scrollView.heightAnchor.constraint(equalToConstant: 200.0).isActive = true
-                
-                self.alertDescriptionScrollView = scrollView
-                
-                superView?.layoutIfNeeded()
-            }
-                        
+            wrapIntoScrollview(alertDescription.bounds.size.height)
+                                    
         }else{
             alertDescription.isHidden = true
         }
@@ -115,13 +98,8 @@ import UIKit
         setShadowAlertView()
     }
     
-    @objc open func setAttributedDescription(description:NSAttributedString) {
-        
-        alertDescription.isHidden = false
-        alertDescription.attributedText = description
-        alertDescription.layoutIfNeeded()
-        
-        if self.alertDescriptionScrollView == nil, alertDescription.bounds.size.height > 200 {
+    fileprivate func wrapIntoScrollview(_ height: CGFloat) {
+        if self.alertDescriptionScrollView == nil, height > 200 {
             let superView = alertDescription.superview as? UIStackView
             alertDescription.removeFromSuperview()
             let scrollView = UIScrollView()
@@ -138,6 +116,17 @@ import UIKit
             
             superView?.layoutIfNeeded()
         }
+    }
+    
+    @objc open func setAttributedDescription(description:NSAttributedString) {
+        
+        alertDescription.isHidden = false
+        alertDescription.attributedText = description
+        alertDescription.layoutIfNeeded()
+        let constraintRect = CGSize(width: alertViewWidthConstraint.constant, height: .greatestFiniteMagnitude)
+        let height = description.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, context: nil).height
+        
+        wrapIntoScrollview(height)
         
     }
     
